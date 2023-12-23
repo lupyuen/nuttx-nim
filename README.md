@@ -2,11 +2,23 @@
 
 TODO
 
-https://github.com/lupyuen2/wip-pinephone-nuttx-apps/pull/3/files
+- [Changes to NuttX Apps](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/pull/3/files)
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/47/files
+- [Changes to NuttX Kernel](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/47/files)
 
-https://github.com/apache/nuttx-apps/pull/1597
+- [NuttX support for Nim](https://github.com/apache/nuttx-apps/pull/1597)
+
+- [Nim support for NuttX](https://github.com/nim-lang/Nim/pull/21372/files)
+
+- [For Nuttx, change ioselectors to use "select"](https://github.com/nim-lang/Nim/pull/21384)
+
+- [Which implementation of NuttX select/poll/EPOLL is recommended in terms of performance and efficiency](https://github.com/apache/nuttx/issues/8604)
+
+- [Nim on Arduino](https://disconnected.systems/blog/nim-on-adruino/)
+
+- [Nim for Embedded Systems](https://github.com/nim-lang/Nim/blob/devel/doc/nimc.md#nim-for-embedded-systems)
+
+- [Nim Compiler User Guide](https://nim-lang.org/docs/nimc.html)
 
 # Build NuttX with Debian Container in VSCode
 
