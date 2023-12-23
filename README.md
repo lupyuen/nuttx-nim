@@ -23,16 +23,24 @@ https://github.com/apache/nuttx-apps/pull/1597
 
 https://nim-lang.org/install_unix.html
 
+```bash
 curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+```
 
 Add to PATH:
 
-
+```bash
 export PATH=/home/vscode/.nimble/bin:$PATH
+```
 
-$ choosenim devel --latest
+Select Latest Dev Version of Nim:
 
-Create a.nim
+```bash
+## Will take a while!
+choosenim devel --latest
+```
+
+Create a.nim:
 
 ```text
 echo "Hello World"
