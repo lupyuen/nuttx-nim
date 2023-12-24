@@ -1,3 +1,5 @@
+![Nim App runs OK on Apache NuttX Real-Time Operating System](https://lupyuen.github.io/images/nim-title.png)
+
 # Experiments with Nim on Apache NuttX Real-Time Operating System
 
 Today Apache NuttX RTOS runs on SBCs that have plenty of RAM: Ox64 with 64 MB RAM!
