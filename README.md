@@ -1,24 +1,65 @@
 # Experiments with Nim on Apache NuttX Real-Time Operating System
 
-TODO
+This Nim App: [hello_nim_async.nim](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello_nim/hello_nim_async.nim)
+
+```nim
+import std/asyncdispatch
+import std/strformat
+
+proc hello_nim() {.exportc, cdecl.} =
+  echo "Hello Nim!" ####
+  GC_runOrc()
+```
+
+Runs OK on NuttX for QEMU RISC-V 64-bit!
+
+```text
++ qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -nographic
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> uname -a
+NuttX  12.0.3 45150e164c5 Dec 23 2023 07:24:20 risc-v rv-virt
+
+nsh> hello_nim
+Hello Nim!
+```
+
+This is how we build NuttX with the Nim App inside...
+
+```bash
+## Install choosenim, add to PATH, select latest Dev Version of Nim Compiler
+curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+export PATH=/home/vscode/.nimble/bin:$PATH
+choosenim devel --latest
+
+## Download WIP NuttX and Apps
+git clone --branch nim https://github.com/lupyuen2/wip-pinephone-nuttx nuttx
+git clone --branch nim https://github.com/lupyuen2/wip-pinephone-nuttx-apps apps
+
+## Configure NuttX for QEMU RISC-V (64-bit)
+tools/configure.sh tools/configure.sh rv-virt:nsh64
+
+## Build NuttX
+make
+
+## Start NuttX with QEMU RISC-V (64-bit)
+qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -nographic
+```
+
+We made some minor tweaks in NuttX...
+
+# TODO
 
 - [Changes to NuttX Apps](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/pull/3/files)
 
 - [Changes to NuttX Kernel](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/47/files)
-
-- [NuttX support for Nim](https://github.com/apache/nuttx-apps/pull/1597)
-
-- [Nim support for NuttX](https://github.com/nim-lang/Nim/pull/21372/files)
-
-- [For Nuttx, change ioselectors to use "select"](https://github.com/nim-lang/Nim/pull/21384)
-
-- [Which implementation of NuttX select/poll/EPOLL is recommended in terms of performance and efficiency](https://github.com/apache/nuttx/issues/8604)
-
-- [Nim on Arduino](https://disconnected.systems/blog/nim-on-adruino/)
-
-- [Nim for Embedded Systems](https://github.com/nim-lang/Nim/blob/devel/doc/nimc.md#nim-for-embedded-systems)
-
-- [Nim Compiler User Guide](https://nim-lang.org/docs/nimc.html)
 
 # Build NuttX with Debian Container in VSCode
 
@@ -170,3 +211,19 @@ qemu-system-riscv64 \
   -kernel nuttx \
   -nographic
 ```
+
+# Documentation
+
+- [NuttX support for Nim](https://github.com/apache/nuttx-apps/pull/1597)
+
+- [Nim support for NuttX](https://github.com/nim-lang/Nim/pull/21372/files)
+
+- [For Nuttx, change ioselectors to use "select"](https://github.com/nim-lang/Nim/pull/21384)
+
+- [Which implementation of NuttX select/poll/EPOLL is recommended in terms of performance and efficiency](https://github.com/apache/nuttx/issues/8604)
+
+- [Nim on Arduino](https://disconnected.systems/blog/nim-on-adruino/)
+
+- [Nim for Embedded Systems](https://github.com/nim-lang/Nim/blob/devel/doc/nimc.md#nim-for-embedded-systems)
+
+- [Nim Compiler User Guide](https://nim-lang.org/docs/nimc.html)
