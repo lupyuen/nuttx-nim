@@ -36,7 +36,7 @@ Nim Compiler won't install on some machines (like a 10-year-old Mac). So we crea
 
 1.  Restart VSCode to use the new PATH
 
-    Install the VSCode Docker Extension
+    Install the [VSCode Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
 
 1.  In VSCode, click the "Remote Explorer" icon in the Left Bar
 
@@ -86,54 +86,58 @@ riscv-none-elf-gcc -v
 
 [(Why we use xPack Toolchain)](https://lupyuen.github.io/articles/riscv#appendix-xpack-gnu-risc-v-embedded-gcc-toolchain-for-64-bit-risc-v)
 
-[Install Nim](https://nim-lang.org/install_unix.html)...
+Assuming that we need [Nim Compiler](https://nim-lang.org/install_unix.html)...
 
-```bash
-curl https://nim-lang.org/choosenim/init.sh -sSf | sh
-```
+1.  Install [Nim Compiler](https://nim-lang.org/install_unix.html)...
 
-Add to PATH...
+    ```bash
+    curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+    ```
 
-```bash
-export PATH=/home/vscode/.nimble/bin:$PATH
-```
+1.  Add to PATH...
 
-Select Latest Dev Version of Nim...
+    ```bash
+    export PATH=/home/vscode/.nimble/bin:$PATH
+    ```
 
-```bash
-## Will take a while!
-choosenim devel --latest
-```
+1.  Select Latest Dev Version of Nim...
 
-Create a.nim...
+    ```bash
+    ## Will take a while!
+    choosenim devel --latest
+    ```
 
-```text
-echo "Hello World"
-```
+1.  Create a file named `a.nim`...
 
-Test Nim...
+    ```text
+    echo "Hello World"
+    ```
 
-```bash
-$ nim c a.nim
-Hint: used config file '/home/vscode/.choosenim/toolchains/nim-#devel/config/nim.cfg' [Conf]
-Hint: used config file '/home/vscode/.choosenim/toolchains/nim-#devel/config/config.nims' [Conf]
-.....................................................................
-Hint:  [Link]
-Hint: mm: orc; threads: on; opt: none (DEBUG BUILD, `-d:release` generates faster code)
-27941 lines; 0.342s; 30.445MiB peakmem; proj: /workspaces/debian/a.nim; out: /workspaces/debian/a [SuccessX]
+1.  Test Nim...
 
-$ ls -l a
--rwxr-xr-x 1 vscode vscode 96480 Dec 22 12:19 a
+    ```bash
+    $ nim c a.nim
+    Hint: used config file '/home/vscode/.choosenim/toolchains/nim-#devel/config/nim.cfg' [Conf]
+    Hint: used config file '/home/vscode/.choosenim/toolchains/nim-#devel/config/config.nims' [Conf]
+    .....................................................................
+    Hint:  [Link]
+    Hint: mm: orc; threads: on; opt: none (DEBUG BUILD, `-d:release` generates faster code)
+    27941 lines; 0.342s; 30.445MiB peakmem; proj: /workspaces/debian/a.nim; out: /workspaces/debian/a [SuccessX]
 
-$ ./a
-Hello World
-```
+    $ ls -l a
+    -rwxr-xr-x 1 vscode vscode 96480 Dec 22 12:19 a
+
+    $ ./a
+    Hello World
+    ```
 
 Git Clone the `nuttx` and `apps` folders. Then configure NuttX...
 
 ```bash
 ## TODO: git clone ... nuttx
 ## TODO: git clone ... apps
+
+## Configure NuttX for QEMU RISC-V (64-bit)
 tools/configure.sh tools/configure.sh rv-virt:nsh64
 make menuconfig
 ```
@@ -153,8 +157,10 @@ RTOS Features → Tasks and Scheduling:
 Save and exit menuconfig, then build and run NuttX...
 
 ```bash
+## Build NuttX
 make
 
+## Start NuttX with QEMU RISC-V (64-bit)
 qemu-system-riscv64 \
   -semihosting \
   -M virt,aclint=on \
