@@ -7,7 +7,7 @@ import std/asyncdispatch
 import std/strformat
 
 proc hello_nim() {.exportc, cdecl.} =
-  echo "Hello Nim!" ####
+  echo "Hello Nim!"
   GC_runOrc()
 ```
 
@@ -37,7 +37,8 @@ git clone --branch nim https://github.com/lupyuen2/wip-pinephone-nuttx nuttx
 git clone --branch nim https://github.com/lupyuen2/wip-pinephone-nuttx-apps apps
 
 ## Configure NuttX for QEMU RISC-V (64-bit)
-tools/configure.sh tools/configure.sh rv-virt:nsh64
+cd nuttx
+tools/configure.sh rv-virt:nsh64
 
 ## Build NuttX
 make
@@ -55,7 +56,40 @@ qemu-system-riscv64 \
 
 We made some minor tweaks in NuttX...
 
-# TODO
+# Fix NuttX for Nim
+
+_How did we fix NuttX to compile Nim Apps correctly?_
+
+We moved .nimcache 2 levels up: [apps/examples/hello_nim/Makefile](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello_nim/Makefile)
+
+```text
+## Move .nimcache 2 levels up
+CFLAGS += -I $(NIMPATH)/lib -I ../../.nimcache
+CSRCS += $(wildcard ../../.nimcache/*.c)
+
+## Previously:
+## CFLAGS += -I $(NIMPATH)/lib -I ./.nimcache
+## CSRCS += $(wildcard .nimcache/*.c)
+```
+
+And we switched the Nim Target Architecture from RISC-V 32-bit to 64-bit: [apps/config.nims](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/config.nims)
+
+```nim
+## Assume we are compiling with `riscv-none-elf-gcc` instead of `riscv64-unknown-elf-gcc`
+switch "riscv32.nuttx.gcc.exe", "riscv-none-elf-gcc" ## TODO: Check for riscv64-unknown-elf-gcc
+switch "riscv64.nuttx.gcc.exe", "riscv-none-elf-gcc" ## TODO: Check for riscv64-unknown-elf-gcc
+## Previously: switch "riscv32.nuttx.gcc.exe", "riscv64-unknown-elf-gcc"
+...
+      case arch
+      ...
+      of "risc-v":
+        ## TODO: Check for riscv32 or riscv3
+        ## CONFIG_ARCH_RV32=y or CONFIG_ARCH_RV64=y
+        result.arch = "riscv64"
+        ## Previsouly: result.arch = "riscv32"
+```
+
+See the changes...
 
 - [Changes to NuttX Apps](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/pull/3/files)
 
@@ -179,7 +213,8 @@ Git Clone the `nuttx` and `apps` folders. Then configure NuttX...
 ## TODO: git clone ... apps
 
 ## Configure NuttX for QEMU RISC-V (64-bit)
-tools/configure.sh tools/configure.sh rv-virt:nsh64
+cd nuttx
+tools/configure.sh rv-virt:nsh64
 make menuconfig
 ```
 
