@@ -90,7 +90,7 @@ switch "riscv64.nuttx.gcc.exe", "riscv-none-elf-gcc" ## TODO: Check for riscv64-
         ## TODO: Check for riscv32 or riscv3
         ## CONFIG_ARCH_RV32=y or CONFIG_ARCH_RV64=y
         result.arch = "riscv64"
-        ## Previsouly: result.arch = "riscv32"
+        ## Previously: result.arch = "riscv32"
 ```
 
 See the changes...
