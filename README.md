@@ -95,11 +95,95 @@ switch "riscv64.nuttx.gcc.exe", "riscv-none-elf-gcc" ## TODO: Check for riscv64-
         ## Previously: result.arch = "riscv32"
 ```
 
-See the changes...
+See the modified files...
 
 - [Changes to NuttX Apps](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/pull/3/files)
 
 - [Changes to NuttX Kernel](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/47/files)
+
+# Nim on Apache NuttX RTOS and Ox64 BL808 RISC-V SBC
+
+Nim also runs OK on Apache NuttX RTOS and Ox64 BL808 RISC-V SBC!
+
+This Nim App: [hello_nim_async.nim](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello_nim/hello_nim_async.nim)
+
+```nim
+import std/asyncdispatch
+import std/strformat
+
+proc hello_nim() {.exportc, cdecl.} =
+  echo "Hello Nim!"
+  GC_runOrc()
+```
+
+Produces this output...
+
+```text
+Starting kernel ...
+ABC
+NuttShell (NSH) NuttX-12.0.3
+nsh> uname -a
+NuttX  12.0.3 d27d0fd4be1-dirty Dec 24 2023 12:32:23 risc-v ox64
+
+nsh> hello_nim
+Hello Nim!
+```
+
+[(Source)](https://gist.github.com/lupyuen/adef0acd97669cd3570a0614e32166fc)
+
+To build NuttX + Nim for Ox64 BL808 SBC...
+
+```bash
+## Install choosenim, add to PATH, select latest Dev Version of Nim Compiler
+curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+export PATH=/home/vscode/.nimble/bin:$PATH
+choosenim devel --latest
+
+## Download WIP NuttX and Apps
+git clone --branch nim https://github.com/lupyuen2/wip-pinephone-nuttx nuttx
+git clone --branch nim https://github.com/lupyuen2/wip-pinephone-nuttx-apps apps
+
+## Configure NuttX for Ox64 BL808 RISC-V SBC
+cd nuttx
+tools/configure.sh ox64:nsh
+
+## Build NuttX Kernel
+make
+
+## Build Apps Filesystem
+make -j 8 export
+pushd ../apps
+./tools/mkimport.sh -z -x ../nuttx/nuttx-export-*.tar.gz
+make -j 8 import
+popd
+
+## Export the Binary Image to `nuttx.bin`
+riscv-none-elf-objcopy \
+  -O binary \
+  nuttx \
+  nuttx.bin
+
+## Prepare a Padding with 64 KB of zeroes
+head -c 65536 /dev/zero >/tmp/nuttx.pad
+
+## Append Padding and Initial RAM Disk to NuttX Kernel
+cat nuttx.bin /tmp/nuttx.pad initrd \
+  >Image
+
+## Copy NuttX Image to Ox64 Linux microSD
+cp Image "/Volumes/NO NAME/"
+diskutil unmountDisk /dev/disk2
+
+## TODO: Boot Ox64 with the microSD
+```
+
+See the modified files...
+
+- [Changes to NuttX Apps](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/pull/3/files)
+
+- [Changes to NuttX Kernel](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/47/files)
+
+TODO: Blink an LED with Nim
 
 # Build NuttX with Debian Container in VSCode
 
@@ -254,12 +338,6 @@ qemu-system-riscv64 \
   -kernel nuttx \
   -nographic
 ```
-
-# Nim on Apache NuttX RTOS and Ox64 BL808 RISC-V SBC
-
-TODO
-
-https://gist.github.com/lupyuen/adef0acd97669cd3570a0614e32166fc
 
 # Documentation
 
