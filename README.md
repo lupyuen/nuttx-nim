@@ -1,5 +1,9 @@
 # Experiments with Nim on Apache NuttX Real-Time Operating System
 
+Today Apache NuttX RTOS runs on SBCs that have plenty of RAM: Ox64 with 64 MB RAM!
+
+Now that we have plentiful RAM: Maybe we should build NuttX Apps with a Memory-Safe, Garbage-Collected language... Like Nim!
+
 This Nim App: [hello_nim_async.nim](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello_nim/hello_nim_async.nim)
 
 ```nim
@@ -262,3 +266,5 @@ qemu-system-riscv64 \
 - [Nim for Embedded Systems](https://github.com/nim-lang/Nim/blob/devel/doc/nimc.md#nim-for-embedded-systems)
 
 - [Nim Compiler User Guide](https://nim-lang.org/docs/nimc.html)
+
+- [Nim Wrapper for LVGL](https://github.com/mantielero/lvgl.nim)
