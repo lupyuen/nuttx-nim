@@ -224,6 +224,8 @@ tools/configure.sh rv-virt:nsh64
 make menuconfig
 ```
 
+Enable "Application Configuration > Examples > Hello World Example (Nim)"
+
 If we need NuttX Networking: Select...
 
 ```text
@@ -252,6 +254,12 @@ qemu-system-riscv64 \
   -kernel nuttx \
   -nographic
 ```
+
+# Nim on Apache NuttX RTOS and Ox64 BL808 RISC-V SBC
+
+TODO
+
+https://gist.github.com/lupyuen/adef0acd97669cd3570a0614e32166fc
 
 # Documentation
 
