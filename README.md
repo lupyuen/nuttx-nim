@@ -343,6 +343,8 @@ Enable the settings...
 
 - "Device Drivers > LED Support > LED Driver"
 
+- "Device Drivers > LED Support > Generic Lower Half LED Driver"
+
 - "Application Configuration > Examples > Hello World Example (Nim)"
 
 - "Application Configuration > Examples > LED Driver Example"
@@ -374,6 +376,115 @@ qemu-system-riscv64 \
   -bios none \
   -kernel nuttx \
   -nographic
+```
+
+# usleep
+
+TODO
+
+usleep calls clock_nanosleep...
+
+```text
+00000000000007e8 <usleep>:
+usleep():
+/workspaces/bookworm/nuttx/libs/libc/unistd/lib_usleep.c:100
+{
+  struct timespec rqtp;
+  time_t sec;
+  int ret = 0;
+
+  if (usec)
+     7e8:	cd15                	beqz	a0,824 <.L3>	7e8: R_RISCV_RVC_BRANCH	.L3
+
+00000000000007ea <.LVL1>:
+/workspaces/bookworm/nuttx/libs/libc/unistd/lib_usleep.c:104
+    {
+      /* Let clock_nanosleep() do all of the work. */
+
+      sec          = usec / 1000000;
+     7ea:	000f47b7          	lui	a5,0xf4
+     7ee:	2407879b          	addw	a5,a5,576 # f4240 <.LASF110+0xe2ec1>
+     7f2:	02f5573b          	divuw	a4,a0,a5
+/workspaces/bookworm/nuttx/libs/libc/unistd/lib_usleep.c:95
+{
+     7f6:	1101                	add	sp,sp,-32
+/workspaces/bookworm/nuttx/libs/libc/unistd/lib_usleep.c:108
+      rqtp.tv_sec  = sec;
+      rqtp.tv_nsec = (usec - (sec * 1000000)) * 1000;
+
+      ret = clock_nanosleep(CLOCK_REALTIME, 0, &rqtp, NULL);
+     7f8:	860a                	mv	a2,sp
+     7fa:	4681                	li	a3,0
+     7fc:	4581                	li	a1,0
+```
+
+clock_nanosleep makes ecall to Kernel clock_nanosleep...
+
+```text
+0000000000001dee <clock_nanosleep>:
+clock_nanosleep():
+/workspaces/bookworm/nuttx/syscall/proxies/PROXY_clock_nanosleep.c:8
+#include <nuttx/config.h>
+#include <time.h>
+#include <syscall.h>
+
+int clock_nanosleep(clockid_t parm1, int parm2, FAR const struct timespec * parm3, FAR struct timespec * parm4)
+{
+    1dee:	88aa                	mv	a7,a0
+
+0000000000001df0 <.LVL1>:
+    1df0:	882e                	mv	a6,a1
+
+0000000000001df2 <.LVL2>:
+    1df2:	87b2                	mv	a5,a2
+
+0000000000001df4 <.LVL3>:
+    1df4:	8736                	mv	a4,a3
+
+0000000000001df6 <.LBB4>:
+sys_call4():
+/workspaces/bookworm/nuttx/include/arch/syscall.h:281
+  register long r0 asm("a0") = (long)(nbr);
+    1df6:	03100513          	li	a0,49
+
+0000000000001dfa <.LVL5>:
+/workspaces/bookworm/nuttx/include/arch/syscall.h:282
+  register long r1 asm("a1") = (long)(parm1);
+    1dfa:	85c6                	mv	a1,a7
+
+0000000000001dfc <.LVL6>:
+/workspaces/bookworm/nuttx/include/arch/syscall.h:283
+  register long r2 asm("a2") = (long)(parm2);
+    1dfc:	8642                	mv	a2,a6
+
+0000000000001dfe <.LVL7>:
+/workspaces/bookworm/nuttx/include/arch/syscall.h:284
+  register long r3 asm("a3") = (long)(parm3);
+    1dfe:	86be                	mv	a3,a5
+
+0000000000001e00 <.LVL8>:
+/workspaces/bookworm/nuttx/include/arch/syscall.h:287
+  asm volatile
+    1e00:	00000073          	ecall
+/workspaces/bookworm/nuttx/include/arch/syscall.h:294
+  asm volatile("nop" : "=r"(r0));
+    1e04:	0001                	nop
+
+0000000000001e06 <.LBE4>:
+clock_nanosleep():
+/workspaces/bookworm/nuttx/syscall/proxies/PROXY_clock_nanosleep.c:10
+  return (int)sys_call4((unsigned int)SYS_clock_nanosleep, (uintptr_t)parm1, (uintptr_t)parm2, (uintptr_t)parm3, (uintptr_t)parm4);
+}
+    1e06:	2501                	sext.w	a0,a0
+    1e08:	8082                	ret
+```
+
+System Call Number for clock_nanosleep is 49...
+
+```text
+ <2><b5b0>: Abbrev Number: 1 (DW_TAG_enumerator)
+    <b5b1>   DW_AT_name        : (strp) (offset: 0x8ca9): SYS_clock_nanosleep
+    <b5b5>   DW_AT_const_value : (data1) 49
 ```
 
 # Documentation
