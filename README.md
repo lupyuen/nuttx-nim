@@ -183,7 +183,134 @@ See the modified files...
 
 - [Changes to NuttX Kernel](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/47/files)
 
-TODO: Blink an LED with Nim
+![Nim App runs OK on Apache NuttX Real-Time Operating System and Ox64 BL808 RISC-V SBC](https://lupyuen.github.io/images/nim-ox64.png)
+
+# Blink an LED with Nim
+
+This is how we Blink an LED with Nim on NuttX: [hello_nim_async.nim](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello_nim/hello_nim_async.nim)
+
+```nim
+import std/strformat  ## String Formatting
+
+## Import NuttX Functions and Macros from C.
+## Based on /home/vscode/.choosenim/toolchains/nim-#devel/lib/std/syncio.nim
+proc c_open(filename: cstring, mode: cint): cint {.
+  importc: "open", header: "<fcntl.h>",
+  nodecl.}
+proc c_close(fd: cint): cint {.
+  importc: "close", header: "<fcntl.h>",
+  nodecl, discardable.}
+proc c_ioctl(fd: cint, request: cint): cint {.
+  importc: "ioctl", header: "<sys/ioctl.h>",
+  nodecl, varargs.}
+proc c_usleep(usec: cuint): cint {.
+  importc: "usleep", header: "<unistd.h>",
+  nodecl, discardable.}
+var O_WRONLY {.
+  importc: "O_WRONLY", header: "<fcntl.h>".}: cint
+var ULEDIOC_SETALL {.
+  importc: "ULEDIOC_SETALL", header: "<nuttx/leds/userled.h>".}: cint
+
+## Blink the LED
+proc blink_led() =
+
+  ## Open the LED Driver
+  echo "Opening /dev/userleds"
+  var fd = c_open("/dev/userleds", O_WRONLY)
+  if fd < 0:
+    echo "Failed to open /dev/userleds"
+    return
+
+  ## Turn on LED
+  echo "Set LED 0 to 1"
+  var ret = c_ioctl(fd, ULEDIOC_SETALL, 1)
+  if ret < 0:
+    echo "ioctl(ULEDIOC_SETALL) failed"
+    return
+
+  ## Wait a second (literally)
+  echo "Waiting..."
+  c_usleep(1000_000)
+
+  ## Turn off LED
+  echo "Set LED 0 to 0"
+  ret = c_ioctl(fd, ULEDIOC_SETALL, 0)
+  if ret < 0:
+    echo "ioctl(ULEDIOC_SETALL) failed"
+    return
+
+  ## Close the LED Driver
+  c_close(fd)
+
+## Main Function in Nim
+proc hello_nim() {.exportc, cdecl.} =
+
+  ## Print something
+  echo "Hello Nim!"
+
+  ## Blink the LED
+  blink_led()
+
+  ## Finish
+  GC_runOrc()
+```
+
+Which is equivalent to this in C: [hello_main.c](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello/hello_main.c#L25-L85)
+
+```c
+#include <nuttx/config.h>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <nuttx/leds/userled.h>
+
+int main(int argc, FAR char *argv[])
+{
+  printf("Hello, World!!\n");
+
+  // Open the LED driver
+  printf("Opening /dev/userleds\n");
+  int fd = open("/dev/userleds", O_WRONLY);
+  if (fd < 0)
+    {
+      int errcode = errno;
+      printf("ERROR: Failed to open /dev/userleds: %d\n",
+             errcode);
+      return EXIT_FAILURE;
+    }
+
+  // Turn on LED
+  puts("Set LED 0 to 1");
+  int ret = ioctl(fd, ULEDIOC_SETALL, 1);
+  if (ret < 0)
+    {
+      int errcode = errno;
+      printf("ERROR: ioctl(ULEDIOC_SUPPORTED) failed: %d\n",
+              errcode);
+      return EXIT_FAILURE;
+    }
+
+  // Sleep a while
+  puts("Waiting...");
+  usleep(500 * 1000L);
+
+  // Turn off LED
+  puts("Set LED 0 to 0");
+  ret = ioctl(fd, ULEDIOC_SETALL, 0);
+  if (ret < 0)
+    {
+      int errcode = errno;
+      printf("ERROR: ioctl(ULEDIOC_SUPPORTED) failed: %d\n",
+              errcode);
+      return EXIT_FAILURE;
+    }
+
+  // Close the LED Driver
+  close(fd);
+
+  return 0;
+}
+```
 
 # Inside a Nim App for NuttX
 
