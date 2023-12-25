@@ -185,6 +185,37 @@ See the modified files...
 
 TODO: Blink an LED with Nim
 
+# Inside a Nim App for NuttX
+
+TODO: What happens inside a NuttX App for NuttX?
+
+https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/c714a317e531aa8ab2de7b9a8e4c4b0f89f66626/config.nims
+
+```text
+$ export TOPDIR=/workspaces/bookworm/nuttx
+$ cd /workspaces/bookworm/apps/examples/hello_nim
+$ nim c --header hello_nim_async.nim
+
+read_config: /workspaces/bookworm/nuttx/.config
+line=CONFIG_DEBUG_SYMBOLS=y
+line=CONFIG_DEBUG_FULLOPT=y
+line=CONFIG_ARCH="risc-v"
+@["keyval=", "ARCH", "\"risc-v\""]
+keyval[1]="risc-v"
+line=CONFIG_RAM_SIZE=33554432
+* arch:    riscv64
+* opt:     oSize
+* debug:   true
+* ramSize: 33554432
+* isSim:   false
+Hint: used config file '/home/vscode/.choosenim/toolchains/nim-#devel/config/nim.cfg' [Conf]
+Hint: used config file '/home/vscode/.choosenim/toolchains/nim-#devel/config/config.nims' [Conf]
+Hint: used config file '/workspaces/bookworm/apps/config.nims' [Conf]
+....................................................................................................................................
+Hint: mm: orc; opt: size; options: -d:danger
+92931 lines; 1.214s; 137.633MiB peakmem; proj: /workspaces/bookworm/apps/examples/hello_nim/hello_nim_async.nim; out: /workspaces/bookworm/apps/.nimcache/hello_nim_async.json [SuccessX]
+```
+
 # Build NuttX with Debian Container in VSCode
 
 Nim Compiler won't install on some machines (like a 10-year-old Mac). So we create a Debian Bookworm Container in VSCode that will compile Nim and NuttX...
