@@ -339,7 +339,11 @@ tools/configure.sh rv-virt:nsh64
 make menuconfig
 ```
 
-Enable "Application Configuration > Examples > Hello World Example (Nim)"
+Enable the settings...
+
+- "Application Configuration > Examples > Hello World Example (Nim)"
+
+- "Device Drivers > LED Support > LED Driver"
 
 If we need NuttX Networking: Select...
 
