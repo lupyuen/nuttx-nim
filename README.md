@@ -487,6 +487,42 @@ System Call Number for clock_nanosleep is 49...
     <b5b5>   DW_AT_const_value : (data1) 49
 ```
 
+We have a fix for the RISC-V Timer! Indeed we call SBI, and it's already supported by NuttX :-)
+
+Here's the fix: https://github.com/lupyuen2/wip-pinephone-nuttx/commit/57ea5f000636f739ac3cb8ea1e60936798f6c3a9#diff-535879ffd6d9fc8e7d84b37a88bdeb1609c4a90e3777150939a96bed18696aee
+
+We only need to change arch/risc-v/src/bl808/bl808_timerisr.c.
+
+(Ignore arch/risc-v/src/common/riscv_mtimer.c, I was verifying that mtime and mtimecmp are unused in Kernel Mode)
+
+How it works:
+
+- riscv_mtimer_initialize calls riscv_mtimer_set_mtimecmp:
+
+  https://github.com/lupyuen2/wip-pinephone-nuttx/blob/nim/arch/risc-v/src/common/riscv_mtimer.c#L318-L332
+
+- riscv_mtimer_set_mtimecmp calls riscv_sbi_set_timer:
+
+  https://github.com/lupyuen2/wip-pinephone-nuttx/blob/nim/arch/risc-v/src/common/riscv_mtimer.c#L136-L141
+
+- riscv_sbi_set_timer calls sbi_ecall:
+
+  https://github.com/lupyuen2/wip-pinephone-nuttx/blob/nim/arch/risc-v/src/common/supervisor/riscv_sbi.c#L94-L107
+
+- sbi_ecall makes an ecall to SBI:
+
+  https://github.com/lupyuen2/wip-pinephone-nuttx/blob/nim/arch/risc-v/src/common/supervisor/riscv_sbi.c#L53-L76
+
+I'm not sure if MTIMER_FREQ is correct, need to verify: https://github.com/lupyuen2/wip-pinephone-nuttx/blob/nim/arch/risc-v/src/bl808/bl808_timerisr.c#L44-L48
+
+```c
+#define MTIMER_FREQ 10000000
+```
+
+"sleep 1" will pause for 10 seconds, so I think my frequency needs to divide or multiply by 10.
+
+Here's the log (ignore the errors): https://gist.github.com/lupyuen/8aa66e7f88d1e31a5f198958c15e4393
+
 # Documentation
 
 - [NuttX support for Nim](https://github.com/apache/nuttx-apps/pull/1597)
