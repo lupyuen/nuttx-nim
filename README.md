@@ -341,9 +341,11 @@ make menuconfig
 
 Enable the settings...
 
+- "Device Drivers > LED Support > LED Driver"
+
 - "Application Configuration > Examples > Hello World Example (Nim)"
 
-- "Device Drivers > LED Support > LED Driver"
+- "Application Configuration > Examples > LED Driver Example"
 
 If we need NuttX Networking: Select...
 
