@@ -262,7 +262,7 @@ Which calls our barebones NuttX LED Driver for Ox64 BL808...
 
 And Nim blinks our LED on Ox64 BL808 SBC!
 
-TODO: Watch the Demo on YouTube
+- [Watch the Demo on YouTube](https://youtube.com/shorts/KCkiXFxBgxQ)
 
 _How did we figure out the Nim Code?_
 
