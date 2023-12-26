@@ -248,14 +248,25 @@ proc hello_nim() {.exportc, cdecl.} =
   ## Print something
   echo "Hello Nim!"
 
-  ## Blink the LED
-  blink_led()
+  ## Blink the LED 20 times
+  for loop in 0..19:
+    blink_led()
 
   ## Finish
   GC_runOrc()
 ```
 
-Which is equivalent to this in C: [hello_main.c](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello/hello_main.c#L25-L85)
+Which calls our barebones NuttX LED Driver for Ox64 BL808...
+
+- ["LED Driver for Ox64 BL808"](https://github.com/lupyuen/nuttx-ox64#led-driver-for-ox64-bl808)
+
+And Nim blinks our LED on Ox64 BL808 SBC!
+
+TODO: Watch the Demo on YouTube
+
+_How did we figure out the Nim Code?_
+
+The code above is equivalent to this in C: [hello_main.c](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello/hello_main.c#L25-L85)
 
 ```c
 #include <nuttx/config.h>
