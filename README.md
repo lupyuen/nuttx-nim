@@ -216,10 +216,13 @@ proc blink_led() =
 
   ## Open the LED Driver
   echo "Opening /dev/userleds"
-  var fd = c_open("/dev/userleds", O_WRONLY)
+  let fd = c_open("/dev/userleds", O_WRONLY)
   if fd < 0:
     echo "Failed to open /dev/userleds"
     return
+
+  ## On Return: Close the LED Driver
+  defer: c_close(fd)
 
   ## Turn on LED
   echo "Set LED 0 to 1"
@@ -239,11 +242,15 @@ proc blink_led() =
     echo "ioctl(ULEDIOC_SETALL) failed"
     return
 
-  ## Close the LED Driver
-  c_close(fd)
+  ## Wait again
+  echo "Waiting..."
+  c_usleep(1000_000)
 
 ## Main Function in Nim
 proc hello_nim() {.exportc, cdecl.} =
+
+  ## On Return: Force the Garbage Collection
+  defer: GC_runOrc()
 
   ## Print something
   echo "Hello Nim!"
@@ -251,9 +258,6 @@ proc hello_nim() {.exportc, cdecl.} =
   ## Blink the LED 20 times
   for loop in 0..19:
     blink_led()
-
-  ## Finish
-  GC_runOrc()
 ```
 
 Which calls our barebones NuttX LED Driver for Ox64 BL808...
