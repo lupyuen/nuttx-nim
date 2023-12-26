@@ -264,6 +264,8 @@ And Nim blinks our LED on Ox64 BL808 SBC!
 
 - [Watch the Demo on YouTube](https://youtube.com/shorts/KCkiXFxBgxQ)
 
+- [See the Log](https://gist.github.com/lupyuen/553c2da4ad5d119468d223e162573e96)
+
 _How did we figure out the Nim Code?_
 
 The code above is equivalent to this in C: [hello_main.c](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello/hello_main.c#L25-L85)
