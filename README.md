@@ -2,6 +2,10 @@
 
 # Experiments with Nim on Apache NuttX Real-Time Operating System
 
+Read the article...
+
+-   ["Nim on a Real-Time Operating System: Apache NuttX RTOS + Ox64 BL808 SBC"](https://lupyuen.github.io/articles/nim)
+
 Today Apache NuttX RTOS runs on SBCs that have plenty of RAM: Ox64 with 64 MB RAM!
 
 Now that we have plentiful RAM: Maybe we should build NuttX Apps with a Memory-Safe, Garbage-Collected language... Like Nim!
@@ -64,6 +68,10 @@ We made some minor tweaks in NuttX...
 
 # Fix NuttX for Nim
 
+Read the article...
+
+-   ["Nim on a Real-Time Operating System: Apache NuttX RTOS + Ox64 BL808 SBC"](https://lupyuen.github.io/articles/nim)
+
 _How did we fix NuttX to compile Nim Apps correctly?_
 
 We moved .nimcache 2 levels up: [apps/examples/hello_nim/Makefile](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello_nim/Makefile)
@@ -102,6 +110,10 @@ See the modified files...
 - [Changes to NuttX Kernel](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/47/files)
 
 # Nim on Apache NuttX RTOS and Ox64 BL808 RISC-V SBC
+
+Read the article...
+
+-   ["Nim on a Real-Time Operating System: Apache NuttX RTOS + Ox64 BL808 SBC"](https://lupyuen.github.io/articles/nim)
 
 Nim also runs OK on Apache NuttX RTOS and Ox64 BL808 RISC-V SBC!
 
@@ -188,6 +200,10 @@ See the modified files...
 # Blink an LED with Nim
 
 ![Blink an LED with Nim](https://lupyuen.github.io/images/nim-code.png)
+
+Read the article...
+
+-   ["Nim on a Real-Time Operating System: Apache NuttX RTOS + Ox64 BL808 SBC"](https://lupyuen.github.io/articles/nim)
 
 This is how we Blink an LED with Nim on NuttX: [hello_nim_async.nim](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello_nim/hello_nim_async.nim)
 
@@ -332,6 +348,10 @@ int main(int argc, FAR char *argv[])
 ```
 
 # Inside a Nim App for NuttX
+
+Read the article...
+
+-   ["Nim on a Real-Time Operating System: Apache NuttX RTOS + Ox64 BL808 SBC"](https://lupyuen.github.io/articles/nim)
 
 TODO: What happens inside a NuttX App for NuttX?
 
@@ -634,6 +654,8 @@ System Call Number for clock_nanosleep is 49...
 ```
 
 # Documentation
+
+- ["Nim on a Real-Time Operating System: Apache NuttX RTOS + Ox64 BL808 SBC"](https://lupyuen.github.io/articles/nim)
 
 - [NuttX support for Nim](https://github.com/apache/nuttx-apps/pull/1597)
 
