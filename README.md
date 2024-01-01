@@ -66,6 +66,8 @@ qemu-system-riscv64 \
 
 We made some minor tweaks in NuttX...
 
+![Nim + NuttX on QEMU Emulator](https://lupyuen.github.io/images/nim-qemu.png)
+
 # Fix NuttX for Nim
 
 Read the article...
@@ -199,8 +201,6 @@ See the modified files...
 
 # Blink an LED with Nim
 
-![Blink an LED with Nim](https://lupyuen.github.io/images/nim-code.png)
-
 Read the article...
 
 -   ["Nim on a Real-Time Operating System: Apache NuttX RTOS + Ox64 BL808 SBC"](https://lupyuen.github.io/articles/nim)
@@ -288,6 +288,8 @@ And Nim blinks our LED on Ox64 BL808 SBC!
 
 - [See the Log](https://gist.github.com/lupyuen/553c2da4ad5d119468d223e162573e96)
 
+![Nim blinks our LED on Ox64 BL808 SBC](https://lupyuen.github.io/images/nim-blink2.jpg)
+
 _How did we figure out the Nim Code?_
 
 The code above is equivalent to this in C: [hello_main.c](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/nim/examples/hello/hello_main.c#L25-L85)
@@ -346,6 +348,8 @@ int main(int argc, FAR char *argv[])
   return 0;
 }
 ```
+
+![Blink an LED with Nim](https://lupyuen.github.io/images/nim-code.png)
 
 # Inside a Nim App for NuttX
 
@@ -544,11 +548,9 @@ qemu-system-riscv64 \
   -nographic
 ```
 
-# usleep
+# System Call for clock_nanosleep
 
-TODO
-
-usleep calls clock_nanosleep...
+TODO: usleep in our NuttX App calls clock_nanosleep in NuttX Kernel...
 
 ```text
 00000000000007e8 <usleep>:
