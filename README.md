@@ -554,6 +554,14 @@ qemu-system-riscv64 \
   -nographic
 ```
 
+If the build fails with missing `arm64_netinitialize`...
+
+```text
+arm64_initialize.c:219: undefined reference to `arm64_netinitialize'
+```
+
+Then [add the function `arm64_netinitialize`](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/77b8295eb761954370481ed113254b7e930f65c0)
+
 If the build fails with `const` errors...
 
 ```text
