@@ -519,7 +519,13 @@ Enable the settings...
 
 - "Application Configuration > Examples > LED Driver Example"
 
-If we need NuttX Networking: Select...
+If the build fails with missing `getsockopt`...
+
+```text
+ioselectors_epoll.nim:407: undefined reference to `getsockopt'
+```
+
+Then we enable NuttX Networking: Select...
 
 ```text
 Networking support: Enable "Networking support"
@@ -547,6 +553,16 @@ qemu-system-riscv64 \
   -kernel nuttx \
   -nographic
 ```
+
+If the build fails with `const` errors...
+
+```text
+../../.nimcache/@m..@s..@s..@s..@s..@shome@svscode@s.choosenim@stoolchains@snim-@hdevel@slib@spure@sasyncdispatch.nim.c:362:285: error: initialization discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+  362 | IGNOF(tyObject_SelectorImpl__JWlu9aJYbxUSEZxA8xSjuMg), .depth = 0, .display = TM__gfe9a52b5gJr8GSrnr883iA_3, .traceImpl = (void*)eqtrace___pureZasyncdispatch_u2061, .flags = 0};
+      |                                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+Then [disable the `-Werror` option](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/e82be7d1f9f662ef369a3c4adc8290a4035f9857)
 
 # System Call for clock_nanosleep
 
