@@ -562,6 +562,14 @@ arm64_initialize.c:219: undefined reference to `arm64_netinitialize'
 
 Then [add the function `arm64_netinitialize`](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/77b8295eb761954370481ed113254b7e930f65c0)
 
+If the build fails with missing `riscv_netinitialize`...
+
+```text
+riscv_initialize.c:124: undefined reference to `riscv_netinitialize'
+```
+
+Then [add the function `riscv_netinitialize'](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/594761cb413a3413a2d9deae15d2f5c31fcc1b65)
+
 If the build fails with `const` errors...
 
 ```text
